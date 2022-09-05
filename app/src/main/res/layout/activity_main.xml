@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewmodel"
+            type="com.example.calculadorapropina.MainViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            tools:context=".MainActivity">
+
+            <ImageView
+                android:id="@+id/icon_costedelservicio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:importantForAccessibility="no"
+                app:layout_constraintBottom_toBottomOf="@+id/CosteDelServicio"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/CosteDelServicio"
+                app:srcCompat="@drawable/ic_coste" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/CosteDelServicio"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:hint="@string/coste_del_servicio"
+                app:layout_constraintStart_toEndOf="@+id/icon_costedelservicio"
+                app:layout_constraintTop_toTopOf="parent">
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/introCost"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:text="" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/icon_pregunta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:importantForAccessibility="no"
+                app:layout_constraintBottom_toBottomOf="@+id/PreguntarAlServicio"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/PreguntarAlServicio"
+                app:srcCompat="@drawable/ic_servicio" />
+
+            <TextView
+                android:id="@+id/PreguntarAlServicio"
+                style="@style/Widget.CalculadoraPropina.TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/como_estuvo_el_servicio"
+                app:layout_constraintStart_toEndOf="@id/icon_pregunta"
+                app:layout_constraintTop_toBottomOf="@+id/CosteDelServicio" />
+
+            <RadioGroup
+                android:id="@+id/opcionesPropina"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="@+id/PreguntarAlServicio"
+                app:layout_constraintTop_toBottomOf="@+id/PreguntarAlServicio">
+
+                <RadioButton
+                    android:id="@+id/OpcionExcelente"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="@{viewmodel.porcentaje.equals(0.20)}"
+                    android:onClick="@{ () -> viewmodel.fijarPorentaje(0.20)}"
+                    android:text="@string/excelente_20" />
+
+                <RadioButton
+                    android:id="@+id/OpcionBueno"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="@{viewmodel.porcentaje.equals(0.18)}"
+                    android:onClick="@{ () -> viewmodel.fijarPorentaje(0.18)}"
+                    android:text="@string/bueno_18" />
+
+                <RadioButton
+                    android:id="@+id/OpcionNormal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="@{viewmodel.porcentaje.equals(0.15)}"
+                    android:onClick="@{ () -> viewmodel.fijarPorentaje(0.15)}"
+                    android:text="@string/normal_15" />
+
+            </RadioGroup>
+
+            <ImageView
+                android:id="@+id/icon_redondear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:importantForAccessibility="no"
+                app:layout_constraintBottom_toBottomOf="@+id/redondear"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/redondear"
+                app:srcCompat="@drawable/ic_redondeo_alto" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/redondear"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="false"
+                android:text="@string/redondeo_a_la_alta"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/icon_redondear"
+                app:layout_constraintTop_toBottomOf="@id/opcionesPropina" />
+
+            <Button
+                android:id="@+id/Calcular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/calcular"
+                android:onClick="@{ () -> viewmodel.fijarPropina( redondear.isChecked(), introCost.getText().toString() )}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/redondear"
+                app:layout_constraintTop_toBottomOf="@+id/redondear" />
+
+            <TextView
+                android:id="@+id/Resultado"
+                style="@style/Widget.CalculadoraPropina.TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@{@string/propina_total(viewmodel.propina.toString())}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/Calcular"
+                tools:text="cuenta_total: $13" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+</layout>
